@@ -318,32 +318,15 @@ healthchecksdb
 # Backup folder for Package Reference Convert tool in Visual Studio 2017
 MigrationBackup/
 
-appsettings.json
-appsettings.json
 Areas/Identity/IdentityHostingStartup.cs
-bin/Release/netcoreapp3.1/appsettings.json
-bin/Release/netcoreapp3.1/appsettings.json
-obj/VegaN_Capstone.csproj.nuget.dgspec.json
-obj/Release/netcoreapp3.1/Razor/Views/_ViewImports.cshtml.g.cs
-obj/Release/netcoreapp3.1/Razor/Views/_ViewStart.cshtml.g.cs
-obj/Release/netcoreapp3.1/Razor/Views/Home/Index.cshtml.g.cs
-obj/Release/netcoreapp3.1/Razor/Views/Home/Privacy.cshtml.g.cs
-obj/Release/netcoreapp3.1/Razor/Views/Shared/_Layout.cshtml.g.cs
-obj/Release/netcoreapp3.1/Razor/Views/Shared/_ValidationScriptsPartial.cshtml.g.cs
-obj/Release/netcoreapp3.1/Razor/Views/Shared/Error.cshtml.g.cs
 obj/Release/netcoreapp3.1/staticwebassets/VegaN_Capstone.StaticWebAssets.Manifest.cache
 obj/Release/netcoreapp3.1/staticwebassets/VegaN_Capstone.StaticWebAssets.xml
 obj/Release/netcoreapp3.1/VegaN_Capstone.AssemblyInfoInputs.cache
 obj/Release/netcoreapp3.1/VegaN_Capstone.assets.cache
 obj/Release/netcoreapp3.1/VegaN_Capstone.csproj.CoreCompileInputs.cache
-obj/Release/netcoreapp3.1/VegaN_Capstone.AssemblyInfo.cs
 obj/Release/netcoreapp3.1/VegaN_Capstone.csproj.FileListAbsolute.txt
 obj/Release/netcoreapp3.1/VegaN_Capstone.RazorCoreGenerate.cache
-appsettings.json
 obj/Release/netcoreapp3.1/Razor/Views/_ViewImports.cshtml.g.cs
-bin/Release/netcoreapp3.1/appsettings.json
-bin/Release/netcoreapp3.1/appsettings.json
-appsettings.json
 Properties/serviceDependencies.json
 Properties/serviceDependencies.local.json
 bin/Release/netcoreapp3.1/appsettings.json
