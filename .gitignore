@@ -370,3 +370,5 @@ obj/Release/netcoreapp3.1/VegaN_Capstone.AssemblyInfo.cs
 obj/Release/netcoreapp3.1/VegaN_Capstone.csproj.FileListAbsolute.txt
 obj/Release/netcoreapp3.1/VegaN_Capstone.RazorCoreGenerate.cache
 *.json
+appsettings.json
+obj/Release/netcoreapp3.1/Razor/Views/_ViewImports.cshtml.g.cs
