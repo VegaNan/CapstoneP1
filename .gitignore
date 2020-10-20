@@ -346,3 +346,5 @@ bin/Release/netcoreapp3.1/appsettings.json
 appsettings.json
 Properties/serviceDependencies.json
 Properties/serviceDependencies.local.json
+bin/Release/netcoreapp3.1/appsettings.json
+*.json
