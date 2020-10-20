@@ -8,6 +8,8 @@ namespace VegaN_Capstone.Data
     public class Mongosettings
     {
         public string Connection { get; set; }
-        public string DatabaseName { get; set; }
+        public string UsersCollection { get; set; }
+        public string BookingsCollection { get; set; }
+        public string ItemsCollection { get; set; }
     }
 }

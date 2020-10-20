@@ -16,13 +16,16 @@ namespace VegaN_Capstone.Controllers
         [HttpPost]
         public IActionResult Login()
         {
-            return View();
+
+            return RedirectToAction("Index");
         }
+
 
         [HttpPost]
         public IActionResult Logout()
         {
-            return View();
+
+            return RedirectToAction("Index");
         }
     }
 }

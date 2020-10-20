@@ -20,57 +20,50 @@ namespace VegaN_Capstone
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-
-
         }
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+
         public void ConfigureServices(IServiceCollection services)
         {
 
             services.AddControllersWithViews();
+
             //configuring our mongo settings (connection and database) 
             services.Configure<Mongosettings>(options =>
             {
                 options.Connection = Configuration.GetSection("MongoSettings:Connection").Value;
-                options.DatabaseName = Configuration.GetSection("MongoSettings:DatabaseName").Value;
+                //options.DatabaseName = Configuration.GetSection("MongoSettings:DatabaseName").Value;
             });
+
             services.AddTransient<IMongoDBContext, MongoDBContext>();
-            services.AddControllersWithViews();
+            services.AddTransient<IDal, DBDal>();
+
             services.AddRazorPages();
 
-            services.AddTransient<IDal, DBDal>();
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
-            app.UseHttpsRedirection();
+            app.UseDeveloperExceptionPage();
             app.UseStaticFiles();
-
             app.UseRouting();
 
-            app.UseAuthorization();
+            //app.UseAuthentication();
+            //app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-            });
+
+            app.UseEndpoints(
+                endpoints =>
+                {
+                    endpoints.MapRazorPages();
+                    endpoints.MapControllerRoute(
+                                name: "default",
+                                pattern: "{controller=Home}/{action=Index}/{id?}");
+                });
         }
     }
 }

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AspNetCore.Identity.Mongo.Model;
 using Microsoft.AspNetCore.Mvc;
-using VegaN_Capstone.Areas.Identity.Data;
 using VegaN_Capstone.Data;
 using VegaN_Capstone.Interfaces;
 using VegaN_Capstone.Models;
@@ -83,7 +83,7 @@ namespace VegaN_Capstone.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult AddUser(User user)
+        public IActionResult AddUser(MongoUser user)
         {
             return View();
         }
@@ -93,7 +93,7 @@ namespace VegaN_Capstone.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult UpdateUser(User user)
+        public IActionResult UpdateUser(MongoUser user)
         {
             return View();
         }

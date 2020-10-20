@@ -12,16 +12,16 @@ namespace VegaN_Capstone.Models
 
         [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
         public string ID { get; }
-        public string Name { get; set; }
-        public string Review{ get; set; }
+        public string Title { get; set; }
+        public string AnnouncementText{ get; set; }
         public DateTime Date { get; set; }
 
 
-        public Announcement(string id, string name, string review, DateTime date)
+        public Announcement(string id, string title, string announcementText, DateTime date)
         {
             ID = id;
-            Name = name;
-            Review = review;
+            Title = title;
+            AnnouncementText = announcementText;
             Date = date;
         }
     }

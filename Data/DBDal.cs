@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AspNetCore.Identity.Mongo.Model;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using VegaN_Capstone.Areas.Identity.Data;
 using VegaN_Capstone.Interfaces;
 using VegaN_Capstone.Models;
 
@@ -14,10 +14,9 @@ namespace VegaN_Capstone.Data
     class DBDal : IDal
     {
         private readonly IMongoDBContext Context;
-        private readonly IMongoCollection<Item> ItemCollection;
-        private readonly IMongoCollection<User> UserCollection;
-        private readonly IMongoCollection<Announcement> AnnouncementCollection;
-        private readonly IMongoCollection<Booking> BookingCollection;
+        private readonly MongoCollectionBase<Item> ItemCollection;
+        private readonly MongoCollectionBase<Announcement> AnnouncementCollection;
+        private readonly MongoCollectionBase<Booking> BookingCollection;
 
 
 
@@ -25,10 +24,9 @@ namespace VegaN_Capstone.Data
         public DBDal(IMongoDBContext context)
         {
             Context = context;
-            ItemCollection = Context.GetCollection<Item>(typeof(Item).Name);
-            UserCollection = Context.GetCollection<User>(typeof(User).Name);
-            AnnouncementCollection = Context.GetCollection<Announcement>(typeof(Announcement).Name);
-            BookingCollection = Context.GetCollection<Booking>(typeof(Booking).Name);
+            ItemCollection = (MongoCollectionBase<Item>)Context.GetCollection<Item>(typeof(Item).Name);
+            AnnouncementCollection = (MongoCollectionBase<Announcement>)Context.GetCollection<Announcement>(typeof(Announcement).Name);
+            BookingCollection = (MongoCollectionBase<Booking>)Context.GetCollection<Booking>(typeof(Booking).Name);
         }
 
         public bool AddAnnouncement(Announcement announcement)
@@ -46,7 +44,7 @@ namespace VegaN_Capstone.Data
             throw new NotImplementedException();
         }
 
-        public bool AddUser(User user)
+        public bool AddUser(MongoUser user)
         {
             throw new NotImplementedException();
         }
@@ -81,7 +79,7 @@ namespace VegaN_Capstone.Data
             throw new NotImplementedException();
         }
 
-        public IEnumerable<User> FindUsers(Dictionary<string, string[]> KeyValues)
+        public IEnumerable<MongoUser> FindUsers(Dictionary<string, string[]> KeyValues)
         {
             throw new NotImplementedException();
         }
@@ -106,7 +104,7 @@ namespace VegaN_Capstone.Data
             throw new NotImplementedException();
         }
 
-        public IEnumerable<User> GetUsers()
+        public IEnumerable<MongoUser> GetUsers()
         {
             throw new NotImplementedException();
         }
@@ -131,7 +129,7 @@ namespace VegaN_Capstone.Data
             throw new NotImplementedException();
         }
 
-        public bool UpdateUser(User user)
+        public bool UpdateUser(MongoUser user)
         {
             throw new NotImplementedException();
         }

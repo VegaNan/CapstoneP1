@@ -10,19 +10,19 @@ namespace VegaN_Capstone.Data
 {
     public class MongoDBContext : IMongoDBContext
     {
-        private IMongoDatabase DB { get; set; }
+        private IMongoDatabase ItemsDB { get; set; }
         private MongoClient MongoClient { get; set; }
         public IClientSessionHandle Session { get; set; }
 
         public MongoDBContext(IOptions<Mongosettings> configuration)
         {
             MongoClient = new MongoClient(configuration.Value.Connection);
-            DB = MongoClient.GetDatabase(configuration.Value.DatabaseName);
+            ItemsDB = MongoClient.GetDatabase(configuration.Value.ItemsCollection);
         }
 
         public IMongoCollection<T> GetCollection<T>(string name)
         {
-            return DB.GetCollection<T>(name);
+            return ItemsDB.GetCollection<T>(name);
         }
 
     }

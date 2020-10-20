@@ -1,8 +1,8 @@
-﻿using System;
+﻿using AspNetCore.Identity.Mongo.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using VegaN_Capstone.Areas.Identity.Data;
 using VegaN_Capstone.Models;
 
 namespace VegaN_Capstone.Interfaces
@@ -18,11 +18,11 @@ namespace VegaN_Capstone.Interfaces
         public IEnumerable<Item> FindItems(Dictionary<string, string[]> KeyValues);
         public IEnumerable<Item> SearchItem(string containsString);
 
-        public IEnumerable<User> GetUsers();
-        public bool UpdateUser(User user);
+        public IEnumerable<MongoUser> GetUsers();
+        public bool UpdateUser(MongoUser user);
         public bool DeleteUser(int id);
-        public bool AddUser(User user);
-        public IEnumerable<User> FindUsers(Dictionary<string, string[]> KeyValues);
+        public bool AddUser(MongoUser user);
+        public IEnumerable<MongoUser> FindUsers(Dictionary<string, string[]> KeyValues);
 
         public IEnumerable<Announcement> GetAnnouncements();
         public bool UpdateAnnouncement(Announcement announcement);
