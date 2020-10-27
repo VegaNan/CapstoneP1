@@ -5,13 +5,15 @@ using System.Threading.Tasks;
 using System.Drawing;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson.Serialization.IdGenerators;
+using MongoDB.Bson;
 
 namespace VegaN_Capstone.Models
 {
-    public class Item
+    public class Item : BsonDocument
     {
         [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
         public string ID { get; }
+        public string Name { get; set; }
         public IEnumerable<Image> Images { get; set; }
         public string Description { get; set; }
         public double PriceMin { get; set; }
@@ -20,9 +22,10 @@ namespace VegaN_Capstone.Models
         public IEnumerable<string> Types { get; set; }
         public IEnumerable<Review> Reviews { get; set; }
         public IEnumerable<DateTime> UnavailableDates { get; set; }
-        public Item(string iD, IEnumerable<Image> images, string description, double priceMin, double priceMax, double rating, IEnumerable<string> types, IEnumerable<Review> reviews, IEnumerable<DateTime> unavailableDates)
+        public Item(string iD,string name, IEnumerable<Image> images, string description, double priceMin, double priceMax, double rating, IEnumerable<string> types, IEnumerable<Review> reviews, IEnumerable<DateTime> unavailableDates)
         {
             ID = iD;
+            Name = name;
             Images = images;
             Description = description;
             PriceMin = priceMin;

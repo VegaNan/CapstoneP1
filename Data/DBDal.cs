@@ -1,6 +1,7 @@
 ﻿using AspNetCore.Identity.Mongo.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -41,7 +42,10 @@ namespace VegaN_Capstone.Data
 
         public bool AddItem(Item item)
         {
-            throw new NotImplementedException();
+            ItemCollection.InsertOne(item);
+            FilterDefinition<Item> filter = Builders<Item>
+                .Filter.Where(x=> x.ID == item.ID);
+            return (ItemCollection.FindAsync(filter) != null);
         }
 
         public bool AddUser(MongoUser user)
@@ -49,22 +53,25 @@ namespace VegaN_Capstone.Data
             throw new NotImplementedException();
         }
 
-        public bool DeleteAnnouncement(int id)
+        public bool DeleteAnnouncement(string id)
         {
             throw new NotImplementedException();
         }
 
-        public bool DeleteBooking(int id)
+        public bool DeleteBooking(string id)
         {
             throw new NotImplementedException();
         }
 
-        public bool DeleteItem(int id)
+        public bool DeleteItem(string id)
         {
-            throw new NotImplementedException();
+            FilterDefinition<Item> filter = Builders<Item>
+                .Filter.Where(x => x.ID == id);
+            ItemCollection.DeleteOne(filter);
+            return (ItemCollection.FindAsync(filter) == null);
         }
 
-        public bool DeleteUser(int id)
+        public bool DeleteUser(string id)
         {
             throw new NotImplementedException();
         }
@@ -74,9 +81,23 @@ namespace VegaN_Capstone.Data
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Item> FindItems(Dictionary<string, string[]> KeyValues)
+
+        public IEnumerable<Item> FindItems(double priceMin, double priceMax, double rating, IEnumerable<string> types)
         {
-            throw new NotImplementedException();
+            List<FilterDefinition<Item>> filters = new List<FilterDefinition<Item>>();
+            filters.Add(Builders<Item>.Filter.Where(i => i.PriceMin.CompareTo(priceMin) >= 0));
+            filters.Add(Builders<Item>.Filter.Where(i => i.PriceMax.CompareTo(priceMax) <= 0));
+            filters.Add(Builders<Item>.Filter.Where(i => i.Rating.CompareTo(rating) >= 0));
+            foreach (string t in types)
+            {
+                filters.Add(Builders<Item>.Filter.Where(i=> i.Types.ToList().Contains(t)));
+            }
+
+            FilterDefinition<Item> filter = Builders<Item>
+                .Filter.And(filters);
+
+            IEnumerable<Item> items = ItemCollection.FindAsync(filter).Result.ToList();
+            return items;
         }
 
         public IEnumerable<MongoUser> FindUsers(Dictionary<string, string[]> KeyValues)
@@ -94,14 +115,25 @@ namespace VegaN_Capstone.Data
             throw new NotImplementedException();
         }
 
-        public Item GetItem(int id)
+        public Item GetItem(string id)
         {
-            throw new NotImplementedException();
+            FilterDefinition<Item> filter = Builders<Item>
+                .Filter.Where(x => x.ID == id);
+            Item item = ItemCollection.FindAsync(filter).Result.FirstOrDefault();
+            return item;
         }
 
         public IEnumerable<Item> GetItems()
         {
-            throw new NotImplementedException();
+            IEnumerable<Item> itemList;
+            IAsyncCursor<Item> Items = ItemCollection.FindAsync(FilterDefinition<Item>.Empty).Result;
+            do
+            {
+                itemList = Items.Current;
+
+            }
+            while (Items.MoveNext());
+            return itemList;
         }
 
         public IEnumerable<MongoUser> GetUsers()
@@ -133,5 +165,6 @@ namespace VegaN_Capstone.Data
         {
             throw new NotImplementedException();
         }
+
     }
 }

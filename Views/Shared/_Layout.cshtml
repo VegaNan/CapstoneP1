@@ -3,6 +3,7 @@
 
 @inject SignInManager<MongoUser> SignInManager
 @inject UserManager<MongoUser> UserManager
+
 <!DOCTYPE html>
 <head>
     <meta charset="utf-8" />
@@ -18,11 +19,30 @@
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Public" asp-action="Index">Items</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                     </li>
 
                     @if (SignInManager.IsSignedIn(User))
                     {
+                        MongoUser user = SignInManager.UserManager.GetUserAsync(User).Result;
+                        bool contains = user.Roles.Contains("ADMINISTRATOR");
+
+                        if (contains)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">Index</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Privacy">Privacy</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Privacy">Privacy</a>
+                            </li>
+                        }
+
                         <li class="nav-item">
                             <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
                         </li>

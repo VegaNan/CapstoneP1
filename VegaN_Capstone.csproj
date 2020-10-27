@@ -20,9 +20,4 @@
     <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\Admin\" />
-    <Folder Include="Views\Public\" />
-  </ItemGroup>
-
 </Project>

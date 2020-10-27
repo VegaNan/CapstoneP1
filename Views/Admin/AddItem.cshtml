@@ -1,0 +1,23 @@
+﻿@model Item
+
+<section>
+    <p>Fill out this form!</p>
+
+    <div asp-validation-summary="All" class="errorText"></div>
+
+    <form asp-controller="Home" asp-action="Form" method="post">
+        <input asp-for="Name" /> <br />
+        <input asp-for="Description" /> <br />
+        <input asp-for="PriceMin" /> <br />
+        <input asp-for="PriceMax" /> <br />
+        <input asp-for="Rating" /> <br />
+        <div class="form-group">
+            <p>Upload one or more Images</p>
+            <input type="file" name="files" multiple />
+        </div>
+
+
+        <input type="submit" value="Submit" />
+    </form>
+
+</section>

@@ -1,0 +1,40 @@
+﻿@model IEnumerable<Item>
+
+@if (Model != null)
+
+{
+
+    <label>Search for an item: </label>
+    <form asp-controller="Public" asp-action="Search" method="get">
+        <label for="title">Title Contains: </label>
+        <input type="text" id="title" name="title" />
+        <button class="button" type="submit">Search</button>
+    </form>
+
+    <label>Filter: </label>
+    <form asp-controller="Public" asp-action="Filter" method="get">
+        <button class="button" type="submit">Filter</button>
+    </form>
+
+    foreach (Item v in Model)
+    {
+        <div class="ItemContainer">
+
+            <partial name="_ItemPartialView" for="@v" />
+            <form asp-controller="Public" asp-action="ViewItem" asp-route-id="@v.ID" method="get">
+                <button typse=" submit" class="button">View</button>
+            </form>
+            @if (true)
+            {
+                <form asp-controller="Admin" asp-action="DeleteItem" asp-route-id="@v.ID" method="post">
+                    <button type="submit" class="button">Delete</button>
+                </form>
+
+            }
+        </div>
+    }
+}
+else
+{
+    <p>There are no items to display</p>
+}

@@ -20,7 +20,7 @@ namespace VegaN_Capstone.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return View("ItemsView", model : dal.GetItems());
         }
         [HttpGet]
         public IActionResult  GetItem(int id)

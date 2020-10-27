@@ -34,7 +34,8 @@ namespace VegaN_Capstone
             services.Configure<Mongosettings>(options =>
             {
                 options.Connection = Configuration.GetSection("MongoSettings:Connection").Value;
-                //options.DatabaseName = Configuration.GetSection("MongoSettings:DatabaseName").Value;
+                options.ItemsCollection = Configuration.GetSection("MongoSettings:ItemsCollection").Value;
+                options.BookingsCollection = Configuration.GetSection("MongoSettings:BookingsCollection").Value;
             });
 
             services.AddTransient<IMongoDBContext, MongoDBContext>();

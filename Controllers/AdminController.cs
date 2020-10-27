@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using AspNetCore.Identity.Mongo.Model;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using VegaN_Capstone.Data;
 using VegaN_Capstone.Interfaces;
 using VegaN_Capstone.Models;
@@ -49,6 +53,20 @@ namespace VegaN_Capstone.Controllers
         [HttpPost]
         public IActionResult AddItem(Item item)
         {
+            if (HttpContext.Request.Form.Files != null)
+            {
+                var files = HttpContext.Request.Form.Files;
+                List<Image> images = item.Images.ToList<Image>();
+
+                foreach (var file in files)
+                {
+                    if (file.Length > 0)
+                    {
+                        images.Add(Image.FromStream(file.OpenReadStream()));
+                    }
+                }
+            }
+
             return View();
         }
         [HttpGet]
