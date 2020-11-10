@@ -1,0 +1,14 @@
+﻿@model IEnumerable<AspNetCore.Identity.Mongo.Model.MongoUser>
+
+@if (Model != null)
+{
+
+    foreach (AspNetCore.Identity.Mongo.Model.MongoUser user in Model)
+    {
+        <partial name="_UserPartial" for="@user" />
+    }
+}
+else
+{
+    <p>There are no users to display</p>
+}

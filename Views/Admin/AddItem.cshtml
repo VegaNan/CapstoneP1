@@ -6,11 +6,11 @@
     <div asp-validation-summary="All" class="errorText"></div>
 
     <form asp-controller="Home" asp-action="Form" method="post">
-        <input asp-for="Name" /> <br />
-        <input asp-for="Description" /> <br />
-        <input asp-for="PriceMin" /> <br />
-        <input asp-for="PriceMax" /> <br />
-        <input asp-for="Rating" /> <br />
+        <label>Name</label><input asp-for="Name" /> <br />
+        <label>Description</label><input asp-for="Description" /> <br />
+        <label>Price Minimum</label><input asp-for="PriceMin" /> <br />
+        <label>Price Maximum</label><input asp-for="PriceMax" /> <br />
+        <label>Rating</label><input asp-for="Rating" /> <br />
         <div class="form-group">
             <p>Upload one or more Images</p>
             <input type="file" name="files" multiple />

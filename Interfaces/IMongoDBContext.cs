@@ -1,13 +1,26 @@
-﻿using MongoDB.Driver;
+﻿using AspNetCore.Identity.Mongo.Model;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using VegaN_Capstone.Models;
 
-namespace VegaN_Capstone.Data
+namespace VegaN_Capstone.Interfaces
 {
     interface IMongoDBContext
     {
-        IMongoCollection<T> GetCollection<T>(string name);
+
+        IMongoDatabase Database { get; }
+
+        IMongoCollection<Item> ItemCollection { get; }
+
+        IMongoCollection<Booking> BookingCollection { get; }
+
+        IMongoCollection<Announcement> AnnouncementCollection { get; }
+
+        IMongoCollection<Review> ReviewCollection { get; }
+        IMongoCollection<MongoUser> UserCollection { get; }
+
     }
 }

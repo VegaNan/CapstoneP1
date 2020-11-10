@@ -1,0 +1,19 @@
+﻿@model AspNetCore.Identity.Mongo.Model.MongoUser
+<div class="infoSection">
+    <p class="label">Email: </p>
+    <p class="infoText"> @Model.Email</p>
+</div>
+<div class="infoSection">
+    <p class="label">UserName: </p>
+    <p class="infoText"> @Model.UserName</p>
+</div>
+<div class="infoSection">
+    <p class="label">Roles: </p>
+    <p class="infoText">
+    @foreach(String s in Model.Roles)
+    {
+        <p>@s</p>
+    }
+    </p>
+
+</div>

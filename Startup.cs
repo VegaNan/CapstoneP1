@@ -34,8 +34,13 @@ namespace VegaN_Capstone
             services.Configure<Mongosettings>(options =>
             {
                 options.Connection = Configuration.GetSection("MongoSettings:Connection").Value;
-                options.ItemsCollection = Configuration.GetSection("MongoSettings:ItemsCollection").Value;
-                options.BookingsCollection = Configuration.GetSection("MongoSettings:BookingsCollection").Value;
+                options.DatabaseName = Configuration.GetSection("MongoSettings:Database").Value;
+                options.UsersCollectionName = Configuration.GetSection("MongoSettings:UsersCollection").Value;
+                options.ItemsCollectionName = Configuration.GetSection("MongoSettings:ItemsCollection").Value;
+                options.BookingsCollectionName = Configuration.GetSection("MongoSettings:BookingsCollection").Value;
+                options.AnnouncementsCollectionName = Configuration.GetSection("MongoSettings:AnnouncementsCollection").Value;
+                options.ReviewsCollectionName = Configuration.GetSection("MongoSettings:ReviewsCollection").Value;
+                options.RolesCollectionName = Configuration.GetSection("MongoSettings:Roles").Value;
             });
 
             services.AddTransient<IMongoDBContext, MongoDBContext>();

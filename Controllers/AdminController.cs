@@ -4,8 +4,14 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using AspNetCore;
 using AspNetCore.Identity.Mongo.Model;
+using AspNetCore.Identity.Mongo.Stores;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using VegaN_Capstone.Data;
@@ -14,111 +20,199 @@ using VegaN_Capstone.Models;
 
 namespace VegaN_Capstone.Controllers
 {
+    [Authorize]
     public class AdminController : Controller
     {
         private readonly IDal dal;
+        private readonly UserManager<MongoUser> _userManager;
+        private readonly RoleManager<MongoRole> _roleManager;
 
-        public AdminController(IDal dal)
+        public AdminController(
+            UserManager<MongoUser> userManager,
+            RoleManager<MongoRole> roleManager,
+            IDal dal)
         {
+            _roleManager = roleManager;
+            _userManager = userManager;
             this.dal = dal;
+        }
 
+        //this checks if the user is an admin
+        private async Task<bool> IsAdmin()
+        {
+
+            MongoRole role = await _roleManager.FindByNameAsync("Admin");
+            await _roleManager.AddClaimAsync(role, new Claim("Permission", "Manage"));
+            MongoUser user = _userManager.GetUserAsync(User).Result;
+
+            if (_userManager.IsInRoleAsync(user, "Admin").Result)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public IActionResult Index()
         {
-            return View();
+            if (IsAdmin().Result)
+            {
+                return View();
+            }
+            return RedirectToAction(actionName: "index", controllerName: "home");
         }
 
 
         [HttpGet]
         public IActionResult GetAllItems()
         {
-            return View();
+            if (IsAdmin().Result)
+            {
+                return View(model: dal.GetItems());
+            }
+            return RedirectToAction(actionName: "index", controllerName: "home");
         }
         [HttpGet]
         public IActionResult ItemTypeFilter(IEnumerable<String> types)
         {
-            return View();
+            if (IsAdmin().Result)
+            {
+                return View();
+            }
+            return RedirectToAction(actionName: "index", controllerName: "home");
         }
         [HttpGet]
         public IActionResult SearchItem(string containsString)
         {
-            return View();
+            if (IsAdmin().Result)
+            {
+                return View();
+            }
+            return RedirectToAction(actionName: "index", controllerName: "home");
         }
         [HttpGet]
         public IActionResult AddItem()
         {
-            return View();
+            if (IsAdmin().Result)
+            {
+                return View();
+            }
+            return RedirectToAction(actionName: "index", controllerName: "home");
         }
         [HttpPost]
         public IActionResult AddItem(Item item)
         {
-            if (HttpContext.Request.Form.Files != null)
+            if (IsAdmin().Result)
             {
-                var files = HttpContext.Request.Form.Files;
-                List<Image> images = item.Images.ToList<Image>();
-
-                foreach (var file in files)
+                if (HttpContext.Request.Form.Files != null)
                 {
-                    if (file.Length > 0)
+                    var files = HttpContext.Request.Form.Files;
+                    List<Image> images = item.Images.ToList<Image>();
+
+                    foreach (var file in files)
                     {
-                        images.Add(Image.FromStream(file.OpenReadStream()));
+                        if (file.Length > 0)
+                        {
+
+                            images.Add(Image.FromStream(file.OpenReadStream()));
+                        }
                     }
                 }
-            }
 
-            return View();
+                return View();
+            }
+            return RedirectToAction(actionName: "index", controllerName: "home");
         }
         [HttpGet]
-        public IActionResult ViewItem(int id)
+        public IActionResult ViewItem(string id)
         {
-            return View();
+            if (IsAdmin().Result && (dal.GetItem(id) != null))
+            {
+                return View(model: dal.GetItem(id));
+            }
+            return RedirectToAction(actionName: "index", controllerName: "home");
         }
+
         [HttpPost]
         public IActionResult UpdateItem(Item item)
         {
-            return View();
+            if (IsAdmin().Result && (dal.GetItem(item.ID) != null))
+            {
+                dal.UpdateItem(item);
+                return ViewItem(item.ID);
+            }
+            return RedirectToAction(actionName: "index", controllerName: "home");
+
         }
         [HttpPost]
-        public IActionResult DeleteItem(int id)
+        public IActionResult DeleteItem(string id)
         {
-            return View();
+            if (IsAdmin().Result && (dal.GetItem(id) != null))
+            {
+                dal.DeleteItem(id);
+                return ViewItem(id);
+            }
+            return RedirectToAction(actionName: "index", controllerName: "home");
+
         }
 
         [HttpGet]
         public IActionResult GetAllUsers()
         {
-            return View();
+            if (IsAdmin().Result)
+            {
+                return View("AdminUsers", model: dal.GetUsers());
+            }
+            return RedirectToAction(actionName: "index", controllerName: "home");
         }
         [HttpGet]
         public IActionResult SearchUserByName(string containsString)
         {
-            return View();
+            if (IsAdmin().Result)
+            {
+                IEnumerable<MongoUser> users = dal.GetUsers().Where(U => U.Email.Contains(containsString));
+                return View("AdminUsers", model:users);
+            }
+            return RedirectToAction(actionName: "index", controllerName: "home");
         }
         [HttpGet]
         public IActionResult NewUser()
         {
-            return View();
+            if (IsAdmin().Result)
+            {
+                return View(model: new MongoUser());
+            }
+            return RedirectToAction(actionName: "index", controllerName: "home");
         }
         [HttpPost]
         public IActionResult AddUser(MongoUser user)
         {
-            return View();
-        }
-        [HttpGet]
-        public IActionResult ViewUser(int id)
-        {
-            return View();
+            if (IsAdmin().Result)
+            { 
+                dal.AddUser(user);
+                return View("AdminUsers", model: new MongoUser());
+            }
+            return RedirectToAction(actionName: "index", controllerName: "home");
         }
         [HttpPost]
         public IActionResult UpdateUser(MongoUser user)
         {
-            return View();
+            if (IsAdmin().Result)
+            {
+                dal.UpdateUser(user);
+                return View("AdminUsers", model: new MongoUser());
+            }
+            return RedirectToAction(actionName: "index", controllerName: "home");
         }
         [HttpPost]
-        public IActionResult DeleteUser(int id)
+        public IActionResult DeleteUser(string id)
         {
-            return View();
+            if (IsAdmin().Result)
+            {
+                dal.DeleteUser(id);
+                return View("AdminUsers", model: new MongoUser());
+            }
+            return RedirectToAction(actionName: "index", controllerName: "home");
         }
 
         [HttpGet]

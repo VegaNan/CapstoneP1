@@ -15,19 +15,9 @@ namespace VegaN_Capstone.Data
     class DBDal : IDal
     {
         private readonly IMongoDBContext Context;
-        private readonly MongoCollectionBase<Item> ItemCollection;
-        private readonly MongoCollectionBase<Announcement> AnnouncementCollection;
-        private readonly MongoCollectionBase<Booking> BookingCollection;
-
-
-
-        //setting our context
         public DBDal(IMongoDBContext context)
         {
             Context = context;
-            ItemCollection = (MongoCollectionBase<Item>)Context.GetCollection<Item>(typeof(Item).Name);
-            AnnouncementCollection = (MongoCollectionBase<Announcement>)Context.GetCollection<Announcement>(typeof(Announcement).Name);
-            BookingCollection = (MongoCollectionBase<Booking>)Context.GetCollection<Booking>(typeof(Booking).Name);
         }
 
         public bool AddAnnouncement(Announcement announcement)
@@ -42,15 +32,21 @@ namespace VegaN_Capstone.Data
 
         public bool AddItem(Item item)
         {
-            ItemCollection.InsertOne(item);
+            Context.ItemCollection.InsertOne(item);
             FilterDefinition<Item> filter = Builders<Item>
                 .Filter.Where(x=> x.ID == item.ID);
-            return (ItemCollection.FindAsync(filter) != null);
+            return (Context.ItemCollection.FindAsync(filter) != null);
         }
 
         public bool AddUser(MongoUser user)
         {
-            throw new NotImplementedException();
+            Context.UserCollection.InsertOne(user);
+            FilterDefinition<MongoUser> f = Builders<MongoUser>
+                .Filter.Where(x => x == user);
+            if (Context.UserCollection.Find(f).FirstOrDefault<MongoUser>() == user) {
+                return true;
+            }
+            return false;
         }
 
         public bool DeleteAnnouncement(string id)
@@ -67,13 +63,20 @@ namespace VegaN_Capstone.Data
         {
             FilterDefinition<Item> filter = Builders<Item>
                 .Filter.Where(x => x.ID == id);
-            ItemCollection.DeleteOne(filter);
-            return (ItemCollection.FindAsync(filter) == null);
+            Context.ItemCollection.DeleteOne(filter);
+            return (Context.ItemCollection.FindAsync(filter) == null);
         }
 
         public bool DeleteUser(string id)
         {
-            throw new NotImplementedException();
+            ObjectId ObjID;
+            ObjectId.TryParse(id, out ObjID);
+            FilterDefinition<MongoUser> filter = Builders<MongoUser>
+                .Filter.Where(x => x.Id == (ObjID));
+
+            Context.UserCollection.DeleteOne(filter);
+
+            return (Context.UserCollection.FindAsync(filter) == null);
         }
 
         public IEnumerable<Booking> FindBooking(Dictionary<string, string[]> KeyValues)
@@ -96,13 +99,8 @@ namespace VegaN_Capstone.Data
             FilterDefinition<Item> filter = Builders<Item>
                 .Filter.And(filters);
 
-            IEnumerable<Item> items = ItemCollection.FindAsync(filter).Result.ToList();
+            IEnumerable<Item> items = Context.ItemCollection.FindAsync(filter).Result.ToList();
             return items;
-        }
-
-        public IEnumerable<MongoUser> FindUsers(Dictionary<string, string[]> KeyValues)
-        {
-            throw new NotImplementedException();
         }
 
         public IEnumerable<Announcement> GetAnnouncements()
@@ -119,14 +117,14 @@ namespace VegaN_Capstone.Data
         {
             FilterDefinition<Item> filter = Builders<Item>
                 .Filter.Where(x => x.ID == id);
-            Item item = ItemCollection.FindAsync(filter).Result.FirstOrDefault();
+            Item item = Context.ItemCollection.FindAsync(filter).Result.FirstOrDefault();
             return item;
         }
 
         public IEnumerable<Item> GetItems()
         {
             IEnumerable<Item> itemList;
-            IAsyncCursor<Item> Items = ItemCollection.FindAsync(FilterDefinition<Item>.Empty).Result;
+            IAsyncCursor<Item> Items = Context.ItemCollection.FindAsync(FilterDefinition<Item>.Empty).Result;
             do
             {
                 itemList = Items.Current;
@@ -138,12 +136,28 @@ namespace VegaN_Capstone.Data
 
         public IEnumerable<MongoUser> GetUsers()
         {
-            throw new NotImplementedException();
+            IEnumerable<MongoUser> userList;
+            bool continueRead = true;
+            IAsyncCursor<MongoUser> users = Context.UserCollection.FindAsync(FilterDefinition<MongoUser>.Empty).Result;
+            do{
+                userList = users.Current;
+                continueRead = users.MoveNext();
+            }
+            while (continueRead) ;
+            return userList; 
         }
 
         public IEnumerable<Item> SearchItem(string containsString)
         {
-            throw new NotImplementedException();
+            IEnumerable<Item> allItemsList;
+            IAsyncCursor<Item> Items = Context.ItemCollection.FindAsync(FilterDefinition<Item>.Empty).Result;
+            do
+            {
+                allItemsList = Items.Current;
+            }
+            while (Items.MoveNext());
+            IEnumerable<Item> itemList = allItemsList.Where(I => I.Name.Contains(containsString));
+            return itemList;
         }
 
         public bool UpdateAnnouncement(Announcement announcement)
@@ -158,12 +172,28 @@ namespace VegaN_Capstone.Data
 
         public bool UpdateItem(Item item)
         {
-            throw new NotImplementedException();
+            DeleteItem(item.ID);
+            AddItem(item);
+            FilterDefinition<Item> f = Builders<Item>
+                .Filter.Where(x => x == item);
+            if (Context.ItemCollection.Find(f).FirstOrDefault<Item>() == item)
+            {
+                return true;
+            }
+            return false;
         }
 
         public bool UpdateUser(MongoUser user)
         {
-            throw new NotImplementedException();
+            DeleteUser(user.Id.ToString());
+            AddUser(user);
+            FilterDefinition<MongoUser> f = Builders<MongoUser>
+                .Filter.Where(x => x == user);
+            if (Context.UserCollection.Find(f).FirstOrDefault<MongoUser>() == user)
+            {
+                return true;
+            }
+            return false;
         }
 
     }

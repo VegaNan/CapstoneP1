@@ -22,7 +22,6 @@ namespace VegaN_Capstone.Interfaces
         public bool UpdateUser(MongoUser user);
         public bool DeleteUser(string id);
         public bool AddUser(MongoUser user);
-        public IEnumerable<MongoUser> FindUsers(Dictionary<string, string[]> KeyValues);
 
         public IEnumerable<Announcement> GetAnnouncements();
         public bool UpdateAnnouncement(Announcement announcement);

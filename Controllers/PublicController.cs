@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using AspNetCore.Identity.Mongo.Model;
 using Microsoft.AspNetCore.Mvc;
 using VegaN_Capstone.Data;
 using VegaN_Capstone.Interfaces;
@@ -20,6 +22,11 @@ namespace VegaN_Capstone.Controllers
 
         public IActionResult Index()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+
+                
+            }
             return View("ItemsView", model : dal.GetItems());
         }
         [HttpGet]
