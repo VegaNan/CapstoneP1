@@ -1,4 +1,5 @@
 ﻿using AspNetCore.Identity.Mongo.Model;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,7 @@ namespace VegaN_Capstone.Interfaces
 
         IMongoCollection<Review> ReviewCollection { get; }
         IMongoCollection<MongoUser> UserCollection { get; }
+        IMongoCollection<BsonDocument> BinImageCollection { get; }
 
     }
 }

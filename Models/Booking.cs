@@ -13,12 +13,16 @@ namespace VegaN_Capstone.Models
         public string ID { get; }
         public DateTime TimeStart { get; set; }
         public DateTime TimeEnd { get; set; }
-        public IEnumerable<int> ItemIds { get; set; }
+        public IEnumerable<string> ItemIds { get; set; }
         public Contact Contact { get; set; }
         public string Notes { get; set; }
         public bool Accepted { get; set; }
 
-        public Booking(string iD, DateTime timeStart, DateTime timeEnd, IEnumerable<int> itemIds, Contact contact, string notes, bool accepted)
+        public Booking()
+        {
+
+        }
+        public Booking(string iD, DateTime timeStart, DateTime timeEnd, IEnumerable<string> itemIds, Contact contact, string notes, bool accepted)
         {
             ID = iD;
             TimeStart = timeStart;

@@ -1,0 +1,46 @@
+﻿@model Item
+
+@if (Model != null)
+{
+    <div>
+        @if (Model.DecodedImages != null)
+        {
+            <div class="ImageSlideshow">
+
+                @foreach (System.Drawing.Image i in Model.DecodedImages)
+                {
+                    <div class="SingleImage">
+
+                        <asp:Image ID="Image1" runat="server" />
+                    </div>
+                }
+
+
+            </div>
+
+            <div class="ImageSelection">
+
+            </div>
+        }
+        else
+        {
+            <p>There are no images to display</p>
+        }
+        <label>Name</label>
+        <p>@Model.Name</p>
+        <br />
+        <label>Description</label>
+        <p>@Model.Description</p>
+        <br />
+        <label>Price Minimum</label>
+        <p>@Model.PriceMin</p>
+        <br />
+        <label>Price Maximum</label>
+        <p>@Model.PriceMax</p>
+        <br />
+        <label>Rating</label>
+        <p>@Model.Rating</p>
+        <br />
+    </div>
+
+}

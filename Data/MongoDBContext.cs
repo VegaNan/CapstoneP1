@@ -1,6 +1,8 @@
 ﻿using AspNetCore.Identity.Mongo.Model;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -69,6 +71,14 @@ namespace VegaN_Capstone.Data
             get
             {
                 return Database.GetCollection<string>(mongosettings.RolesCollectionName);
+            }
+        }
+
+        public IMongoCollection<BsonDocument> BinImageCollection
+        {
+            get
+            {
+                return Database.GetCollection<BsonDocument>(mongosettings.ImageCollectionName);
             }
         }
     }

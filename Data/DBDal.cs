@@ -5,6 +5,8 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using VegaN_Capstone.Interfaces;
@@ -22,16 +24,24 @@ namespace VegaN_Capstone.Data
 
         public bool AddAnnouncement(Announcement announcement)
         {
-            throw new NotImplementedException();
+            Context.AnnouncementCollection.InsertOne(announcement);
+            FilterDefinition<Item> filter = Builders<Item>
+                .Filter.Where(x => x.ID == announcement.ID);
+            return (Context.ItemCollection.FindAsync(filter) != null);
         }
 
         public bool AddBooking(Booking booking)
         {
-            throw new NotImplementedException();
+            Context.BookingCollection.InsertOne(booking);
+            FilterDefinition<Item> filter = Builders<Item>
+                .Filter.Where(x => x.ID == booking.ID);
+            return (Context.ItemCollection.FindAsync(filter) != null);
         }
 
         public bool AddItem(Item item)
         {
+
+            //Breaks here
             Context.ItemCollection.InsertOne(item);
             FilterDefinition<Item> filter = Builders<Item>
                 .Filter.Where(x=> x.ID == item.ID);
@@ -195,6 +205,6 @@ namespace VegaN_Capstone.Data
             }
             return false;
         }
-
+        
     }
 }

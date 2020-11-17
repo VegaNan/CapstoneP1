@@ -18,6 +18,9 @@ namespace VegaN_Capstone.Data
         public string AnnouncementsCollectionName { get; set; }
         public string ReviewsCollectionName { get; set; }
         public string RolesCollectionName { get; set; }
+        public string ImageCollectionName { get; set; }
+
+        
 
 
     }

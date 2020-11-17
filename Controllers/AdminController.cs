@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.FileProviders;
 using MongoDB.Bson;
 using VegaN_Capstone.Data;
 using VegaN_Capstone.Interfaces;
@@ -95,7 +96,7 @@ namespace VegaN_Capstone.Controllers
         {
             if (IsAdmin().Result)
             {
-                return View();
+                return View("AddItem", model: new Item());
             }
             return RedirectToAction(actionName: "index", controllerName: "home");
         }
@@ -107,19 +108,46 @@ namespace VegaN_Capstone.Controllers
                 if (HttpContext.Request.Form.Files != null)
                 {
                     var files = HttpContext.Request.Form.Files;
-                    List<Image> images = item.Images.ToList<Image>();
 
                     foreach (var file in files)
                     {
                         if (file.Length > 0)
                         {
+                            string fileName = Path.GetFileName(file.FileName);
+                            //string filePath = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images")).Root + $@"\{fileName}";
 
-                            images.Add(Image.FromStream(file.OpenReadStream()));
+                            //using (var fileStream = new FileStream(filePath, FileMode.Create))
+                            //{
+                            //    file.CopyTo(fileStream);
+                            //    fileStream.Flush();
+                            //}
+                            //List<byte[]> imagebinList = new List<byte[]>();
+                            //if (item.BinImages != null)
+                            //{
+                            //    imagebinList = item.BinImages.ToList();
+                            //}
+
+                            byte[] result = new byte[file.Length];
+                            using( var stream = file.OpenReadStream())
+                            {
+                                stream.Write(result);
+                            }
+
+                            item.AddImage(result);
                         }
                     }
                 }
 
-                return View();
+                if (ModelState.IsValid)
+                {
+                    dal.AddItem(item);
+                    return RedirectToAction(actionName: "index", controllerName: "home");
+                }
+                else
+                {
+                    return View("AddItem", model: item);
+                }
+
             }
             return RedirectToAction(actionName: "index", controllerName: "home");
         }
@@ -171,7 +199,7 @@ namespace VegaN_Capstone.Controllers
             if (IsAdmin().Result)
             {
                 IEnumerable<MongoUser> users = dal.GetUsers().Where(U => U.Email.Contains(containsString));
-                return View("AdminUsers", model:users);
+                return View("AdminUsers", model: users);
             }
             return RedirectToAction(actionName: "index", controllerName: "home");
         }
@@ -188,7 +216,7 @@ namespace VegaN_Capstone.Controllers
         public IActionResult AddUser(MongoUser user)
         {
             if (IsAdmin().Result)
-            { 
+            {
                 dal.AddUser(user);
                 return View("AdminUsers", model: new MongoUser());
             }

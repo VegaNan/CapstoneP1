@@ -1,0 +1,37 @@
+﻿@model Booking
+
+@if (Model.ItemIds != null)
+{
+    <section>
+        <p>Fill out this form!</p>
+
+        <div asp-validation-summary="All" class="errorText"></div>
+
+        <form asp-controller="Home" asp-action="AddBooking" method="post">
+            <label>TimeStart </label><input asp-for="TimeStart" /> <br />
+            <label>TimeEnd </label><input asp-for="TimeEnd" /> <br />
+            <label>Name </label><input asp-for="Contact.Name" /> <br />
+            <label>Address </label><input asp-for="Contact.Address" /> <br />
+            <label>Email </label><input asp-for="Contact.Email" /> <br />
+            <label>Phone Number  </label><input asp-for="Contact.PhoneNumber" /> <br />
+            <label>Notes </label><input asp-for="Notes" /> <br />
+            <input type="submit" value="Submit" />
+        </form>
+    </section>
+    <section>
+        <label>Items: </label>
+        @foreach (string s in Model.ItemIds)
+        {
+            <br />
+            <p>@s</p>
+        }
+        <br />
+    </section>
+}
+else
+{
+    <section>
+        <p>Please add items in order to create a booking</p>
+    </section>
+}
+

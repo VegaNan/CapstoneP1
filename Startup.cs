@@ -31,20 +31,35 @@ namespace VegaN_Capstone
             services.AddControllersWithViews();
 
             //configuring our mongo settings (connection and database) 
-            services.Configure<Mongosettings>(options =>
+            //services.Configure<Mongosettings>(options =>
+            //{
+            //    options.Connection = Configuration.GetSection("MongoSettings:Connection").Value;
+            //    options.DatabaseName = Configuration.GetSection("MongoSettings:Database").Value;
+            //    options.UsersCollectionName = Configuration.GetSection("MongoSettings:UsersCollection").Value;
+            //    options.ItemsCollectionName = Configuration.GetSection("MongoSettings:ItemsCollection").Value;
+            //    options.BookingsCollectionName = Configuration.GetSection("MongoSettings:BookingsCollection").Value;
+            //    options.AnnouncementsCollectionName = Configuration.GetSection("MongoSettings:AnnouncementsCollection").Value;
+            //    options.ReviewsCollectionName = Configuration.GetSection("MongoSettings:ReviewsCollection").Value;
+            //    options.RolesCollectionName = Configuration.GetSection("MongoSettings:Roles").Value;
+            //    options.ImageCollectionName = Configuration.GetSection("MongoSettings:ImageCollection").Value;
+            //
+            //});
+
+            //services.AddTransient<IMongoDBContext, MongoDBContext>();
+            //services.AddTransient<IDal, DBDal>();
+            services.Configure<SqlServerSettings>(options =>
             {
-                options.Connection = Configuration.GetSection("MongoSettings:Connection").Value;
-                options.DatabaseName = Configuration.GetSection("MongoSettings:Database").Value;
-                options.UsersCollectionName = Configuration.GetSection("MongoSettings:UsersCollection").Value;
-                options.ItemsCollectionName = Configuration.GetSection("MongoSettings:ItemsCollection").Value;
-                options.BookingsCollectionName = Configuration.GetSection("MongoSettings:BookingsCollection").Value;
-                options.AnnouncementsCollectionName = Configuration.GetSection("MongoSettings:AnnouncementsCollection").Value;
-                options.ReviewsCollectionName = Configuration.GetSection("MongoSettings:ReviewsCollection").Value;
-                options.RolesCollectionName = Configuration.GetSection("MongoSettings:Roles").Value;
+                options.Database = Configuration.GetSection("SqlSettings:Database").Value;
+                options.UserId = Configuration.GetSection("SqlSettings:UserId").Value;
+                options.Password = Configuration.GetSection("SqlSettings:Password").Value;
+                options.Server = Configuration.GetSection("SqlSettings:Server").Value;
+
             });
 
-            services.AddTransient<IMongoDBContext, MongoDBContext>();
-            services.AddTransient<IDal, DBDal>();
+
+            services.AddTransient<ISqlDBContext, SqlServerDBContext>();
+            services.AddTransient<IDal, SqlServerDBDal>();
+
 
             services.AddRazorPages();
 

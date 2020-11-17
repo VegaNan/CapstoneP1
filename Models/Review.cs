@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson.Serialization.IdGenerators;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace VegaN_Capstone.Models
 {
-    public class Review
+    public class Review : BsonDocument
     {
 
         [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
