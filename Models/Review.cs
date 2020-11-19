@@ -10,20 +10,12 @@ namespace VegaN_Capstone.Models
 {
     public class Review : BsonDocument
     {
-
-        [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
-        public string ID { get; }
-
+        public int ReviewId { get; set; }
+        public int ItemId { get; set; }
         public string Name { get; set; }
-        public string ReviewString { get; set; }
+        public string ReviewText { get; set; }
         public DateTime Date { get; set; }
 
-        public Review(string id, string name, string reviewString, DateTime date)
-        {
-            ID = id;
-            Name = name;
-            ReviewString = reviewString;
-            Date = date;
-        }
+        public Review() { }
     }
 }

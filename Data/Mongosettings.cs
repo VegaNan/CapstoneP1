@@ -13,15 +13,5 @@ namespace VegaN_Capstone.Data
         public string Connection { get; set; }
         public string DatabaseName { get; set; }
         public string UsersCollectionName { get; set; }
-        public string ItemsCollectionName { get; set; }
-        public string BookingsCollectionName { get; set; }
-        public string AnnouncementsCollectionName { get; set; }
-        public string ReviewsCollectionName { get; set; }
-        public string RolesCollectionName { get; set; }
-        public string ImageCollectionName { get; set; }
-
-        
-
-
     }
 }

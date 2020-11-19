@@ -30,34 +30,7 @@ namespace VegaN_Capstone.Data
                 return database;
             }
         }
-        public IMongoCollection<Item> ItemCollection
-        {
-            get
-            {
-                return Database.GetCollection<Item>(mongosettings.ItemsCollectionName);
-            }
-        }
-        public IMongoCollection<Booking> BookingCollection
-        {
-            get
-            {
-                return Database.GetCollection<Booking>(mongosettings.BookingsCollectionName);
-            }
-        }
-        public IMongoCollection<Announcement> AnnouncementCollection
-        {
-            get
-            {
-                return Database.GetCollection<Announcement>(mongosettings.AnnouncementsCollectionName);
-            }
-        }
-        public IMongoCollection<Review> ReviewCollection
-        {
-            get
-            {
-                return Database.GetCollection<Review>(mongosettings.ReviewsCollectionName);
-            }
-        }
+
         public IMongoCollection<MongoUser> UserCollection
         {
             get
@@ -66,20 +39,5 @@ namespace VegaN_Capstone.Data
             }
         }
 
-        public IMongoCollection<string> RoleCollection
-        {
-            get
-            {
-                return Database.GetCollection<string>(mongosettings.RolesCollectionName);
-            }
-        }
-
-        public IMongoCollection<BsonDocument> BinImageCollection
-        {
-            get
-            {
-                return Database.GetCollection<BsonDocument>(mongosettings.ImageCollectionName);
-            }
-        }
     }
 }

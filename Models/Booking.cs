@@ -9,28 +9,22 @@ namespace VegaN_Capstone.Models
 {
     public class Booking
     {
-        [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
-        public string ID { get; }
+        public string BookingId { get; set; }
         public DateTime TimeStart { get; set; }
         public DateTime TimeEnd { get; set; }
-        public IEnumerable<string> ItemIds { get; set; }
-        public Contact Contact { get; set; }
+        public string Name { get; set; }
+        public string StreetAddress { get; set; }
+        public string City { get; set; }
+        public string ZipCode { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Email { get; set; }
         public string Notes { get; set; }
         public bool Accepted { get; set; }
+        public int[] ItemIds { get; set; }
 
         public Booking()
         {
 
-        }
-        public Booking(string iD, DateTime timeStart, DateTime timeEnd, IEnumerable<string> itemIds, Contact contact, string notes, bool accepted)
-        {
-            ID = iD;
-            TimeStart = timeStart;
-            TimeEnd = timeEnd;
-            ItemIds = itemIds;
-            Contact = contact;
-            Notes = notes;
-            Accepted = accepted;
         }
 
     }

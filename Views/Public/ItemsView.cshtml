@@ -21,18 +21,18 @@
 <div class="ItemContainer">
 
     <partial name="_ItemPartialView" for="@v" />
-    <form asp-controller="Public" asp-action="GetItem" asp-route-id="@v.ID" method="get">
+    <form asp-controller="Public" asp-action="GetItem" asp-route-id="@v.ItemId" method="get">
         <button typse=" submit" class="button">View</button>
     </form>
     @if (true)
     {
-        <form asp-controller="Admin" asp-action="DeleteItem" asp-route-id="@v.ID" method="post">
+        <form asp-controller="Admin" asp-action="DeleteItem" asp-route-id="@v.ItemId" method="post">
             <button type="submit" class="button">Delete</button>
         </form>
     }
     else
     {
-        <form asp-controller="Public" asp-action="AddItemToBooking" asp-route-id="@v.ID" method="post">
+        <form asp-controller="Public" asp-action="AddItemToBooking" asp-route-id="@v.ItemId" method="post">
             <button type="submit" class="button">Add to booking</button>
         </form>
     }

@@ -24,18 +24,21 @@ namespace VegaN_Capstone.Controllers
     [Authorize]
     public class AdminController : Controller
     {
-        private readonly IDal dal;
+        private readonly SqlServerDBDal dal;
+        private readonly MongoDBDal mongodal;
         private readonly UserManager<MongoUser> _userManager;
         private readonly RoleManager<MongoRole> _roleManager;
 
         public AdminController(
             UserManager<MongoUser> userManager,
             RoleManager<MongoRole> roleManager,
-            IDal dal)
+            SqlServerDBDal dal,
+            MongoDBDal mongodal)
         {
             _roleManager = roleManager;
             _userManager = userManager;
             this.dal = dal;
+            this.mongodal = mongodal;
         }
 
         //this checks if the user is an admin
@@ -113,27 +116,13 @@ namespace VegaN_Capstone.Controllers
                     {
                         if (file.Length > 0)
                         {
-                            string fileName = Path.GetFileName(file.FileName);
-                            //string filePath = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images")).Root + $@"\{fileName}";
-
-                            //using (var fileStream = new FileStream(filePath, FileMode.Create))
-                            //{
-                            //    file.CopyTo(fileStream);
-                            //    fileStream.Flush();
-                            //}
-                            //List<byte[]> imagebinList = new List<byte[]>();
-                            //if (item.BinImages != null)
-                            //{
-                            //    imagebinList = item.BinImages.ToList();
-                            //}
-
-                            byte[] result = new byte[file.Length];
-                            using( var stream = file.OpenReadStream())
-                            {
-                                stream.Write(result);
-                            }
-
-                            item.AddImage(result);
+                            List<Models.Image> images = item.Images.ToList();
+                            Models.Image currentImage = new Models.Image();
+                            currentImage.ItemId = item.ItemId;
+                            var bitmap = new Bitmap(file.OpenReadStream());
+                            currentImage.ImageContent = bitmap;
+                            images.Add(currentImage);
+                            item.Images = images;
                         }
                     }
                 }
@@ -152,7 +141,7 @@ namespace VegaN_Capstone.Controllers
             return RedirectToAction(actionName: "index", controllerName: "home");
         }
         [HttpGet]
-        public IActionResult ViewItem(string id)
+        public IActionResult ViewItem(int id)
         {
             if (IsAdmin().Result && (dal.GetItem(id) != null))
             {
@@ -164,16 +153,16 @@ namespace VegaN_Capstone.Controllers
         [HttpPost]
         public IActionResult UpdateItem(Item item)
         {
-            if (IsAdmin().Result && (dal.GetItem(item.ID) != null))
+            if (IsAdmin().Result && (dal.GetItem(item.ItemId) != null))
             {
                 dal.UpdateItem(item);
-                return ViewItem(item.ID);
+                return ViewItem(item.ItemId);
             }
             return RedirectToAction(actionName: "index", controllerName: "home");
 
         }
         [HttpPost]
-        public IActionResult DeleteItem(string id)
+        public IActionResult DeleteItem(int id)
         {
             if (IsAdmin().Result && (dal.GetItem(id) != null))
             {
@@ -189,7 +178,7 @@ namespace VegaN_Capstone.Controllers
         {
             if (IsAdmin().Result)
             {
-                return View("AdminUsers", model: dal.GetUsers());
+                return View("AdminUsers", model: mongodal.GetUsers());
             }
             return RedirectToAction(actionName: "index", controllerName: "home");
         }
@@ -198,7 +187,7 @@ namespace VegaN_Capstone.Controllers
         {
             if (IsAdmin().Result)
             {
-                IEnumerable<MongoUser> users = dal.GetUsers().Where(U => U.Email.Contains(containsString));
+                IEnumerable<MongoUser> users = mongodal.GetUsers().Where(U => U.Email.Contains(containsString));
                 return View("AdminUsers", model: users);
             }
             return RedirectToAction(actionName: "index", controllerName: "home");
@@ -217,7 +206,7 @@ namespace VegaN_Capstone.Controllers
         {
             if (IsAdmin().Result)
             {
-                dal.AddUser(user);
+                mongodal.AddUser(user);
                 return View("AdminUsers", model: new MongoUser());
             }
             return RedirectToAction(actionName: "index", controllerName: "home");
@@ -227,7 +216,7 @@ namespace VegaN_Capstone.Controllers
         {
             if (IsAdmin().Result)
             {
-                dal.UpdateUser(user);
+                mongodal.UpdateUser(user);
                 return View("AdminUsers", model: new MongoUser());
             }
             return RedirectToAction(actionName: "index", controllerName: "home");
@@ -237,7 +226,7 @@ namespace VegaN_Capstone.Controllers
         {
             if (IsAdmin().Result)
             {
-                dal.DeleteUser(id);
+                mongodal.DeleteUser(id);
                 return View("AdminUsers", model: new MongoUser());
             }
             return RedirectToAction(actionName: "index", controllerName: "home");

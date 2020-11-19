@@ -1,13 +1,14 @@
 ﻿@model Item
+@using VegaN_Capstone.Models
 
 @if (Model != null)
 {
     <div>
-        @if (Model.DecodedImages != null)
+        @if (Model.Images != null)
         {
             <div class="ImageSlideshow">
 
-                @foreach (System.Drawing.Image i in Model.DecodedImages)
+                @foreach (Image i in Model.Images)
                 {
                     <div class="SingleImage">
 
@@ -27,16 +28,13 @@
             <p>There are no images to display</p>
         }
         <label>Name</label>
-        <p>@Model.Name</p>
+        <p>@Model.ItemName</p>
         <br />
         <label>Description</label>
-        <p>@Model.Description</p>
+        <p>@Model.ItemDescription</p>
         <br />
         <label>Price Minimum</label>
-        <p>@Model.PriceMin</p>
-        <br />
-        <label>Price Maximum</label>
-        <p>@Model.PriceMax</p>
+        <p>@Model.Price</p>
         <br />
         <label>Rating</label>
         <p>@Model.Rating</p>

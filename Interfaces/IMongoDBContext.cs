@@ -9,20 +9,11 @@ using VegaN_Capstone.Models;
 
 namespace VegaN_Capstone.Interfaces
 {
-    interface IMongoDBContext
+    public interface IMongoDBContext
     {
 
         IMongoDatabase Database { get; }
-
-        IMongoCollection<Item> ItemCollection { get; }
-
-        IMongoCollection<Booking> BookingCollection { get; }
-
-        IMongoCollection<Announcement> AnnouncementCollection { get; }
-
-        IMongoCollection<Review> ReviewCollection { get; }
         IMongoCollection<MongoUser> UserCollection { get; }
-        IMongoCollection<BsonDocument> BinImageCollection { get; }
 
     }
 }

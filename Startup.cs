@@ -31,22 +31,17 @@ namespace VegaN_Capstone
             services.AddControllersWithViews();
 
             //configuring our mongo settings (connection and database) 
-            //services.Configure<Mongosettings>(options =>
-            //{
-            //    options.Connection = Configuration.GetSection("MongoSettings:Connection").Value;
-            //    options.DatabaseName = Configuration.GetSection("MongoSettings:Database").Value;
-            //    options.UsersCollectionName = Configuration.GetSection("MongoSettings:UsersCollection").Value;
-            //    options.ItemsCollectionName = Configuration.GetSection("MongoSettings:ItemsCollection").Value;
-            //    options.BookingsCollectionName = Configuration.GetSection("MongoSettings:BookingsCollection").Value;
-            //    options.AnnouncementsCollectionName = Configuration.GetSection("MongoSettings:AnnouncementsCollection").Value;
-            //    options.ReviewsCollectionName = Configuration.GetSection("MongoSettings:ReviewsCollection").Value;
-            //    options.RolesCollectionName = Configuration.GetSection("MongoSettings:Roles").Value;
-            //    options.ImageCollectionName = Configuration.GetSection("MongoSettings:ImageCollection").Value;
-            //
-            //});
+            services.Configure<Mongosettings>(options =>
+            {
+                options.Connection = Configuration.GetSection("MongoSettings:Connection").Value;
+                options.DatabaseName = Configuration.GetSection("MongoSettings:Database").Value;
+                options.UsersCollectionName = Configuration.GetSection("MongoSettings:UsersCollection").Value;
+               
+            });
 
-            //services.AddTransient<IMongoDBContext, MongoDBContext>();
-            //services.AddTransient<IDal, DBDal>();
+            services.AddTransient<MongoDBDal>();
+
+            services.AddTransient<IMongoDBContext, MongoDBContext>();
             services.Configure<SqlServerSettings>(options =>
             {
                 options.Database = Configuration.GetSection("SqlSettings:Database").Value;
@@ -57,13 +52,11 @@ namespace VegaN_Capstone
             });
 
 
-            services.AddTransient<ISqlDBContext, SqlServerDBContext>();
-            services.AddTransient<IDal, SqlServerDBDal>();
+            services.AddTransient<SqlServerDBContext>();
+            services.AddTransient<SqlServerDBDal>();
 
 
             services.AddRazorPages();
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

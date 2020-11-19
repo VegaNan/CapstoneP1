@@ -11,23 +11,25 @@ using VegaN_Capstone.Data;
 using VegaN_Capstone.Interfaces;
 using VegaN_Capstone.Models;
 
+
 namespace VegaN_Capstone.Controllers
 {
     public class PublicController : Controller
     {
-        private readonly IDal dal;
+        private readonly SqlServerDBDal dal;
 
-        public PublicController(IDal dal)
+        public PublicController(SqlServerDBDal dal)
         {
             this.dal = dal;
         }
 
         public IActionResult Index()
         {
-            return View("ItemsView", model : dal.GetItems());
+            IEnumerable<Item> items = dal.GetItems().Result;
+            return View("ItemsView", model : items);
         }
         [HttpGet]
-        public IActionResult  GetItem(string id)
+        public IActionResult  GetItem(int id)
         {
             return View("ViewSingleItem", model: dal.GetItem(id));
         }
