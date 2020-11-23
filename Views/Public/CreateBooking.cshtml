@@ -1,0 +1,40 @@
+﻿@model Booking
+
+<p>Your Booking has been created. Look for an email confirming your booking and final total soon. Please call if you have any questions!</p>
+
+@if (Model.Items != null && Model.Items.Count() > 0)
+{
+    <section>
+
+        <label>TimeStart </label><p id="timeStart" asp-for="TimeStart" /> <br />
+        <label>TimeEnd </label><p id="timeEnd" asp-for="TimeEnd" /> <br />
+        <label>Name </label><p asp-for="Name" /> <br />
+        <label>Street Address </label><p asp-for="StreetAddress" /> <br />
+        <label>City </label><p asp-for="City" /> <br />
+        <label>Zip Code </label><p asp-for="ZipCode" /> <br />
+        <label>Email </label><p asp-for="Email" /> <br />
+        <label>Phone Number  </label><p asp-for="PhoneNumber" /> <br />
+        @if (Model.Notes != null && Model.Notes.Length > 0)
+        {
+            <label>Notes </label><p asp-for="Notes" /> <br />
+
+        }
+    </section>
+    <section>
+        <label>Items: </label>
+        @foreach (Item i in Model.Items)
+        {
+            <div class="CheckoutItem">
+                @if (i.Images.Count() > 0)
+                {
+                    <img data="@i.Images.First()" class="CheckoutImage" />
+                }
+                <p class="CheckoutItemName">@i.ItemName</p>
+                <p class="CheckoutItemDescription">@i.ItemDescription</p>
+                <p class="CheckoutItemTypes">@i.Types</p>
+                <p class="CheckoutItemCost">Price Per Hour: $@i.Price</p>
+            </div>
+        }
+
+</section>
+}

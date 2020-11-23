@@ -4,9 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using VegaN_Capstone.Validator;
 
 namespace VegaN_Capstone.Models
 {
+    [Booking]
     public class Booking
     {
         public string BookingId { get; set; }

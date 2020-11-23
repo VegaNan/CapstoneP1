@@ -6,10 +6,11 @@
         <p>Fill out this form!</p>
 
         <div asp-validation-summary="All" class="errorText"></div>
-
-        <form asp-controller="Home" asp-action="AddBooking" method="post">
-            <label>TimeStart </label><input asp-for="TimeStart" placeholder="@DateTime.Now"/> <br />
-            <label>TimeEnd </label><input asp-for="TimeEnd" placeholder="@DateTime.Now.AddHours(2)" /> <br />
+        @{string currentTime = DateTime.Now.AddDays(7).ToString("yyyy-mm-dd") + "T07:00:00:00.000";}; 
+        
+        <form asp-controller="Public" asp-action="CreateBooking" method="post">
+            <label>TimeStart </label><input asp-for="TimeStart" value=@currentTime min="@currentTime" max=@DateTime.Now.AddYears(1).ToString("yyyy-mm-dd")/> <br />
+            <label>TimeEnd </label><input asp-for="TimeEnd"  value=@currentTime min="@currentTime" max=@DateTime.Now.AddYears(1).ToString("yyyy-mm-dd")/> <br />
             <label>Name </label><input asp-for="Name" /> <br />
             <label>Street Address </label><input asp-for="StreetAddress" /> <br />
             <label>City </label><input asp-for="City" /> <br />
@@ -22,20 +23,24 @@
     </section>
     <section>
         <label>Items: </label>
+        @{double price = 0;}
         @foreach (Item i in Model.Items)
         {
             <div class="CheckoutItem">
-                @if(i.Images.Count() > 0)
+                @if (i.Images.Count() > 0)
                 {
-                    <img data="@i.Images.First()" class="CheckoutImage"/>
+                    <img data="@i.Images.First()" class="CheckoutImage" />
                 }
                 <p class="CheckoutItemName">@i.ItemName</p>
                 <p class="CheckoutItemDescription">@i.ItemDescription</p>
                 <p class="CheckoutItemTypes">@i.Types</p>
             </div>
 
+            price += i.Price;
         }
         <br />
+        <p>Total Per Hour: @price</p>
+
     </section>
 }
 else

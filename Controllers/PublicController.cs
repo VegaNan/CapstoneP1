@@ -66,8 +66,8 @@ namespace VegaN_Capstone.Controllers
         [HttpPost]
         public IActionResult CreateBooking(Booking booking)
         {
-            dal.AddBooking(booking);
-            return View();
+            dal.AddBooking(booking).Wait();
+            return View(model:booking);
         }
 
         [HttpPost]

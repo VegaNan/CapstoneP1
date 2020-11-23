@@ -39,9 +39,69 @@ namespace VegaN_Capstone.Data
 
 
         //Booking
-        public void AddBooking(Booking booking)
+        public async Task<int> AddBooking(Booking booking)
         {
-            throw new NotImplementedException();
+            using DbConnection connection = Context.connection();
+            bool connectionWasOpen = (connection.State == System.Data.ConnectionState.Open);
+            if (!connectionWasOpen)
+            {
+                connection.Open();
+            }
+            int bookingId = 1;
+            if (booking != null)
+            {
+                //insert the booking
+                string bookingString = string.Format("INSERT INTO [dbo].[Bookings] " +
+                    "([Date], [TimeStart], [TimeEnd], [Name], [StreetAddress], [City], [ZipCode], [PhoneNumber], [Email], [Notes], [Accepted]) " +
+                    "VALUES(@Date, @TimeStart, @TimeEnd, '{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', {7})",
+                    booking.Name, booking.StreetAddress, booking.City, booking.ZipCode, booking.PhoneNumber, booking.Email, booking.Notes, booking.Accepted ? (byte)1 : (byte)0);
+                Console.WriteLine(bookingString);
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = bookingString;
+
+                    DbParameter com1 = command.CreateParameter();
+                    com1.ParameterName = "@Date";
+                    com1.DbType = System.Data.DbType.Date;
+                    com1.Value = booking.TimeStart.ToString("yyyy-MM-dd"); 
+                    command.Parameters.Add(com1);
+                    Console.WriteLine("Date set");
+
+                    DbParameter com2 = command.CreateParameter();
+                    com2.ParameterName = "@TimeStart";
+                    com2.DbType = System.Data.DbType.Time;
+                    com2.Value = booking.TimeStart.ToString("HH:mm:ss");
+                    command.Parameters.Add(com2);
+                    Console.WriteLine("timestart set");
+
+                    DbParameter com3 = command.CreateParameter();
+                    com3.ParameterName = "@TimeEnd";
+                    com3.DbType = System.Data.DbType.Time;
+                    com3.Value = booking.TimeEnd.ToString("HH:mm:ss");
+                    command.Parameters.Add(com3);
+                    Console.WriteLine("timeend set");
+
+                    await command.ExecuteNonQueryAsync();
+                    Console.WriteLine("command ran");
+                }
+                //get the id
+                //string idString = string.Format("SELECT [ItemId] FROM[dbo].[Bookings] WHERE ItemName = '{0}' AND ItemDescription = '{1}' AND Price = '{2}'");
+                //using (var command = connection.CreateCommand())
+                //{
+                //    command.CommandText = idString;
+                //    DbDataReader reader = command.ExecuteReaderAsync().Result;
+                //    reader.Read();
+                //    bookingId = reader.GetInt32(0);
+                //}
+                //add the id and itemID to the BookingItem table
+
+
+
+                //add the date and itemIds to ItemUnavailableDates
+
+            }
+            connection.Close();
+            return bookingId;
         }
         public void DeleteBooking(int id)
         {
@@ -64,6 +124,7 @@ namespace VegaN_Capstone.Data
         //Item
         public async void AddItem(Item item)
         {
+            item.ItemDescription = item.ItemDescription.Replace("'", "''");
             using DbConnection connection = Context.connection();
             bool connectionWasOpen = (connection.State == System.Data.ConnectionState.Open);
             if (!connectionWasOpen)
