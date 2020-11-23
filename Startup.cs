@@ -27,6 +27,15 @@ namespace VegaN_Capstone
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDistributedMemoryCache();
+
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(60);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
 
             services.AddControllersWithViews();
 
@@ -54,7 +63,7 @@ namespace VegaN_Capstone
 
             services.AddTransient<SqlServerDBContext>();
             services.AddTransient<SqlServerDBDal>();
-
+            //services.AddSession();
 
             services.AddRazorPages();
         }
@@ -65,6 +74,7 @@ namespace VegaN_Capstone
             app.UseDeveloperExceptionPage();
             app.UseStaticFiles();
             app.UseRouting();
+            app.UseSession();
 
             app.UseAuthentication();
             app.UseAuthorization();

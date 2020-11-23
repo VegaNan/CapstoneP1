@@ -20,7 +20,7 @@ namespace VegaN_Capstone.Models
         public string Email { get; set; }
         public string Notes { get; set; }
         public bool Accepted { get; set; }
-        public int[] ItemIds { get; set; }
+        public IEnumerable<Item> Items { get; set; }
 
         public Booking()
         {

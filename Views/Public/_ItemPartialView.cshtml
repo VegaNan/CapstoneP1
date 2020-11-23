@@ -1,12 +1,20 @@
 ﻿@model Item 
 
+<div class="itemText">
+    <label class="itemLabel">Name:</label>
+    <p class="descriptionText">@Model.ItemName</p>
+    <br />
+    <label class="itemLabel">Description:</label>
+    <p class="descriptionText">@Model.ItemDescription</p>
+    <br />
+    <label class="itemLabel">Average Price:</label>
+    <p class="descriptionText">$@Model.Price per hour</p>
+    <br />
+    <label class="itemLabel">Rating:</label>
+    <p class="descriptionText">@Model.Rating</p>
+    <br />
+</div>
 
-<label>Name</label>
-<p>@Model.ItemName</p>
-<br />
-<label>Description</label>
-<p>@Model.ItemDescription</p><br />
-<label>Price</label>
-<p>@Model.Price</p><br />
-<label>Rating</label>
-<p>@Model.Rating</p><br />
+<div class="ItemImages">
+
+</div>

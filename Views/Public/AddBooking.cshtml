@@ -1,6 +1,6 @@
 ﻿@model Booking
 
-@if (Model.ItemIds != null)
+@if (Model.Items != null && Model.Items.Count() > 0)
 {
     <section>
         <p>Fill out this form!</p>
@@ -8,24 +8,32 @@
         <div asp-validation-summary="All" class="errorText"></div>
 
         <form asp-controller="Home" asp-action="AddBooking" method="post">
-            <label>TimeStart </label><input asp-for="TimeStart" /> <br />
-            <label>TimeEnd </label><input asp-for="TimeEnd" /> <br />
+            <label>TimeStart </label><input asp-for="TimeStart" placeholder="@DateTime.Now"/> <br />
+            <label>TimeEnd </label><input asp-for="TimeEnd" placeholder="@DateTime.Now.AddHours(2)" /> <br />
             <label>Name </label><input asp-for="Name" /> <br />
             <label>Street Address </label><input asp-for="StreetAddress" /> <br />
             <label>City </label><input asp-for="City" /> <br />
             <label>Zip Code </label><input asp-for="ZipCode" /> <br />
             <label>Email </label><input asp-for="Email" /> <br />
             <label>Phone Number  </label><input asp-for="PhoneNumber" /> <br />
-            <label>Notes </label><input asp-for="Notes" /> <br />
+            <label>Notes </label><input asp-for="Notes" placeholder="Let us know about your event!"/> <br />
             <input type="submit" value="Submit" />
         </form>
     </section>
     <section>
         <label>Items: </label>
-        @foreach (int s in Model.ItemIds)
+        @foreach (Item i in Model.Items)
         {
-            <br />
-            <p>@s</p>
+            <div class="CheckoutItem">
+                @if(i.Images.Count() > 0)
+                {
+                    <img data="@i.Images.First()" class="CheckoutImage"/>
+                }
+                <p class="CheckoutItemName">@i.ItemName</p>
+                <p class="CheckoutItemDescription">@i.ItemDescription</p>
+                <p class="CheckoutItemTypes">@i.Types</p>
+            </div>
+
         }
         <br />
     </section>

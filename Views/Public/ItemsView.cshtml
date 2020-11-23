@@ -1,4 +1,9 @@
 ﻿@model IEnumerable<Item>
+@using Microsoft.AspNetCore.Identity
+@using AspNetCore.Identity.Mongo.Model;
+
+@inject SignInManager<MongoUser> SignInManager
+@inject UserManager<MongoUser> UserManager
 
 @if (Model != null)
 
@@ -18,25 +23,25 @@
 
     foreach (Item v in Model)
     {
-<div class="ItemContainer">
+        <div class="itemContainer">
 
-    <partial name="_ItemPartialView" for="@v" />
-    <form asp-controller="Public" asp-action="GetItem" asp-route-id="@v.ItemId" method="get">
-        <button typse=" submit" class="button">View</button>
-    </form>
-    @if (true)
-    {
-        <form asp-controller="Admin" asp-action="DeleteItem" asp-route-id="@v.ItemId" method="post">
-            <button type="submit" class="button">Delete</button>
-        </form>
-    }
-    else
-    {
-        <form asp-controller="Public" asp-action="AddItemToBooking" asp-route-id="@v.ItemId" method="post">
-            <button type="submit" class="button">Add to booking</button>
-        </form>
-    }
-</div>
+            <partial name="_ItemPartialView" for="@v" />
+            <form asp-controller="Public" asp-action="GetItem" asp-route-id="@v.ItemId" method="get">
+                <button typse=" submit" class="button">View</button>
+            </form>
+            @if (SignInManager.IsSignedIn(User) && UserManager.IsInRoleAsync(UserManager.GetUserAsync(User).Result, "admin").Result)
+            {
+                <form asp-controller="Admin" asp-action="DeleteItem" asp-route-id="@v.ItemId" method="post">
+                    <button type="submit" class="button">Delete</button>
+                </form>
+            }
+            else
+            {
+                <form asp-controller="Public" asp-action="AddItemToBooking" asp-route-id="@v.ItemId" method="post">
+                    <button type="submit" class="button">Add to booking</button>
+                </form>
+            }
+        </div>
     }
 }
 else

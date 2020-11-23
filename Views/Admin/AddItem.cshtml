@@ -1,23 +1,21 @@
 ﻿@model Item
 
 <section>
-    <p>Fill out this form!</p>
+    <p>Create a New Item</p>
 
     <div asp-validation-summary="All" class="errorText"></div>
 
-    <form enctype='multipart/form-data' asp-controller="Admin" asp-action="AddItem" method="post">
-        <label>Name</label><input asp-for="ItemName" /> <br />
-        <label>Description</label><input asp-for="ItemDescription" /> <br />
-        <label>Price</label><input asp-for="Price" /> <br />
-        <label>Types</label><input asp-for="Types" placeholder="Comma Separated List"/> <br />
-        <label>Rating</label><input asp-for="Rating" /> <br />
-        <div class="form-group">
-            <p>Upload one or more Images</p>
-            <input type="file" name="files" multiple />
+    <form class="newItemForm" enctype='multipart/form-data' asp-controller="Admin" asp-action="AddItem" method="post">
+        <div class="formItem"><label class="itemLabel">Name:</label><input asp-for="ItemName"/></div>
+        <div class="formItem"><label class="itemLabel">Description:</label><input asp-for="ItemDescription" class="input multipleStringInput" /></div>
+        <div class="formItem"><label class="itemLabel">Average price per hour:</label><input asp-for="Price"/> </div>
+        <div class="formItem"><label class="itemLabel">Types:</label><input asp-for="Types" placeholder="Comma Separated List" /> </div>
+        <div class="formItem"><label class="itemLabel">Rating:</label><input asp-for="Rating" placeholder="2.5/5"> </div>
+        <div class="form-group formItem">
+            <label class="itemLabel">Upload one or more Images</label>
+            <input class="itemLabel" type="file" name="files" multiple />
         </div>
-
-
-        <input type="submit" value="Submit" />
+        <input type="submit" value="Submit" class="btn"/>
     </form>
 
 </section>

@@ -30,19 +30,15 @@
                 </li>
 
                 @if (SignInManager.IsSignedIn(User))
+
                 {
-                    //MongoUser user = SignInManager.UserManager.GetUserAsync(User).Result;
-                    //bool contains = user.Roles.Contains("ADMINISTRATOR");
-                    //
-                    //if (contains)
-                    //{
+
+                    @if(UserManager.IsInRoleAsync(UserManager.GetUserAsync(User).Result, "admin").Result){
+
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">Administration</a>
                     </li>
-                    //<li class="nav-item">
-                    //    <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Privacy">Privacy</a>
-                    //</li>
-                    //}
+                    }
 
                     <li class="nav-item">
                         <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
@@ -76,4 +72,4 @@
     </footer>
     @RenderSection("Scripts", required: false)
 </body>
-    </html>
+</html>
