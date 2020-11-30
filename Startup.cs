@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
 using VegaN_Capstone.Data;
 using VegaN_Capstone.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace VegaN_Capstone
 {
@@ -49,8 +50,9 @@ namespace VegaN_Capstone
             });
 
             services.AddTransient<MongoDBDal>();
-
             services.AddTransient<IMongoDBContext, MongoDBContext>();
+
+
             services.Configure<SqlServerSettings>(options =>
             {
                 options.Database = Configuration.GetSection("SqlSettings:Database").Value;
@@ -63,9 +65,9 @@ namespace VegaN_Capstone
 
             services.AddTransient<SqlServerDBContext>();
             services.AddTransient<SqlServerDBDal>();
-            //services.AddSession();
 
             services.AddRazorPages();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

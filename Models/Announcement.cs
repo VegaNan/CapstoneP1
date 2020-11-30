@@ -9,7 +9,7 @@ namespace VegaN_Capstone.Models
 {
     public class Announcement
     {
-        public string ID { get; }
+        public int ID { get; }
         public string AnnouncementTitle { get; set; }
         public string AnnouncementText{ get; set; }
         public DateTime DateStart { get; set; }

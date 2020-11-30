@@ -66,8 +66,21 @@ namespace VegaN_Capstone.Controllers
         [HttpPost]
         public IActionResult CreateBooking(Booking booking)
         {
-            dal.AddBooking(booking).Wait();
-            return View(model:booking);
+            if (ModelState.IsValid)
+            {
+                Booking finalBooking = dal.GetBooking(dal.AddBooking(booking).Result);
+                return View(model:finalBooking);
+            }
+            else
+            {
+                List<Item> Items = SessionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart");
+
+                if (Items != null && Items.Count() > 0)
+                {
+                    booking.Items = Items;
+                }
+                return View("AddBooking", model: booking);
+            }
         }
 
         [HttpPost]

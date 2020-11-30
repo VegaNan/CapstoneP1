@@ -2,8 +2,6 @@
 
 <p>Your Booking has been created. Look for an email confirming your booking and final total soon. Please call if you have any questions!</p>
 
-@if (Model.Items != null && Model.Items.Count() > 0)
-{
     <section>
 
         <label>TimeStart </label><p id="timeStart" asp-for="TimeStart" /> <br />
@@ -20,6 +18,8 @@
 
         }
     </section>
+@if (Model.Items != null && Model.Items.Count() > 0)
+{
     <section>
         <label>Items: </label>
         @foreach (Item i in Model.Items)

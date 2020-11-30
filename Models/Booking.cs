@@ -11,7 +11,7 @@ namespace VegaN_Capstone.Models
     [Booking]
     public class Booking
     {
-        public string BookingId { get; set; }
+        public int BookingId { get; set; }
         public DateTime TimeStart { get; set; }
         public DateTime TimeEnd { get; set; }
         public string Name { get; set; }

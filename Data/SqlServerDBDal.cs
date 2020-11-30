@@ -63,46 +63,117 @@ namespace VegaN_Capstone.Data
                     DbParameter com1 = command.CreateParameter();
                     com1.ParameterName = "@Date";
                     com1.DbType = System.Data.DbType.Date;
-                    com1.Value = booking.TimeStart.ToString("yyyy-MM-dd"); 
+                    com1.Value = booking.TimeStart.ToString("yyyy-MM-dd");
                     command.Parameters.Add(com1);
-                    Console.WriteLine("Date set");
 
                     DbParameter com2 = command.CreateParameter();
                     com2.ParameterName = "@TimeStart";
                     com2.DbType = System.Data.DbType.Time;
                     com2.Value = booking.TimeStart.ToString("HH:mm:ss");
                     command.Parameters.Add(com2);
-                    Console.WriteLine("timestart set");
 
                     DbParameter com3 = command.CreateParameter();
                     com3.ParameterName = "@TimeEnd";
                     com3.DbType = System.Data.DbType.Time;
                     com3.Value = booking.TimeEnd.ToString("HH:mm:ss");
                     command.Parameters.Add(com3);
-                    Console.WriteLine("timeend set");
 
-                    await command.ExecuteNonQueryAsync();
-                    Console.WriteLine("command ran");
+                    DbDataReader reader = command.ExecuteReaderAsync().Result;
+                    reader.Read();
+                    bookingId = reader.GetInt32(0);
                 }
-                //get the id
-                //string idString = string.Format("SELECT [ItemId] FROM[dbo].[Bookings] WHERE ItemName = '{0}' AND ItemDescription = '{1}' AND Price = '{2}'");
-                //using (var command = connection.CreateCommand())
-                //{
-                //    command.CommandText = idString;
-                //    DbDataReader reader = command.ExecuteReaderAsync().Result;
-                //    reader.Read();
-                //    bookingId = reader.GetInt32(0);
-                //}
+                connection.Close();
                 //add the id and itemID to the BookingItem table
+                foreach (Item i in booking.Items)
+                {
+                    connection.Open();
+                    string insertString = string.Format("INSERT INTO [dbo].[BookingItem] ([BookingId], [ItemId]) VALUES ({0}, {1})", bookingId, i.ItemId);
+                    using(var command = connection.CreateCommand())
+                    {
+                        command.CommandText = insertString;
+                        await command.ExecuteNonQueryAsync();
+                    }
+                    connection.Close();
+
+                    //add the date and itemIds to ItemUnavailableDates
+
+                    connection.Open();
+                    string unavailableString = string.Format("INSERT INTO [dbo].[ItemUnavailableDates] ([ItemId], [date]) VALUES ({0}, @date)", i.ItemId);
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText = unavailableString;
+                        DbParameter dataCom = command.CreateParameter();
+                        dataCom.ParameterName = "@date";
+                        dataCom.DbType = System.Data.DbType.Date;
+                        dataCom.Value = booking.TimeStart.ToString("yyyy-MM-dd");
+                        await command.ExecuteNonQueryAsync();
+                    }
+                    connection.Close();
+                }
 
 
 
-                //add the date and itemIds to ItemUnavailableDates
 
             }
-            connection.Close();
             return bookingId;
         }
+
+        public Booking GetBooking(int id)
+        {
+            using DbConnection connection = Context.connection();
+            bool connectionWasOpen = (connection.State == System.Data.ConnectionState.Open);
+            if (!connectionWasOpen)
+            {
+                connection.Open();
+            }
+            Booking b = new Booking();
+            string query = "SELECT * FROM [dbo].[Bookings] WHERE [BookingId] =" + id;
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = query;
+                DbDataReader r = command.ExecuteReaderAsync().Result;
+                if (r.Read())
+                {
+                    b.BookingId = r.GetInt32(0);
+                    b.TimeStart = r.GetDateTime(2);
+                    b.TimeEnd = r.GetDateTime(3);
+                    b.Name = r.GetString(4);
+                    b.StreetAddress = r.GetString(5);
+                    b.City = r.GetString(6);
+                    b.ZipCode = r.GetString(7);
+                    b.PhoneNumber = r.GetString(8);
+                    b.Email = r.GetString(9);
+                    b.Notes = r.GetString(10);
+                    b.Accepted = r.GetByte(11) == 1;
+                }
+            }
+            connection.Close();
+
+            //get the item ids
+            List<int> itemIds = new List<int>();
+            string query2 = "SELECT [ItemId] FROM [dbo].[BookingItem] WHERE [BookingId] =" + id;
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = query2;
+                DbDataReader r = command.ExecuteReaderAsync().Result;
+                if (r.Read())
+                {
+                    itemIds.Add(r.GetInt32(0));
+                }
+            }
+
+            //get the items and add them to the booking
+            List<Item> Items = new List<Item>();
+            foreach (int ItemId in itemIds)
+            {
+                Item i = GetItem(ItemId).Result;
+                Items.Add(i);
+            }
+            b.Items = Items;
+
+            return b;
+        }
+
         public void DeleteBooking(int id)
         {
             throw new NotImplementedException();
@@ -113,8 +184,41 @@ namespace VegaN_Capstone.Data
         }
         public IEnumerable<Booking> GetBookings()
         {
-            throw new NotImplementedException();
+            List<Booking> bookings = new List<Booking>();
+            using DbConnection connection = Context.connection();
+            bool connectionWasOpen = (connection.State == System.Data.ConnectionState.Open);
+            if (!connectionWasOpen)
+            {
+                connection.Open();
+            }
+
+            string query = "SELECT * FROM [dbo].[Bookings]";
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = query;
+                DbDataReader r = command.ExecuteReaderAsync().Result;
+                if (r.Read())
+                {
+                    Booking b = new Booking();
+                    b.BookingId = r.GetInt32(0);
+                    b.TimeStart = r.GetDateTime(2);
+                    b.TimeEnd = r.GetDateTime(3);
+                    b.Name = r.GetString(4);
+                    b.StreetAddress = r.GetString(5);
+                    b.City = r.GetString(6);
+                    b.ZipCode = r.GetString(7);
+                    b.PhoneNumber = r.GetString(8);
+                    b.Email = r.GetString(9);
+                    b.Notes = r.GetString(10);
+                    b.Accepted = r.GetByte(11) == 1;
+                    bookings.Add(b);
+                }
+            }
+            connection.Close();
+
+            return bookings;
         }
+
         public void UpdateBooking(Booking booking)
         {
             throw new NotImplementedException();
@@ -209,13 +313,12 @@ namespace VegaN_Capstone.Data
 
                     string type = t.Trim();
                     type = (char.ToUpper(type[0]) + type.Substring(1).ToLower());
-                    if(type.Contains(" "))
+                    if (type.Contains(" "))
                     {
                         throw new Exception("Something went wrong! The type is:" + type);
                     }
                     //check if they are in the Types table
                     string TypesTableCHeck = string.Format("SELECT [TypeId] FROM[dbo].[Types] WHERE TypeText = '{0}' ", type);
-                    Console.WriteLine(TypesTableCHeck);
 
                     using (var command = connection.CreateCommand())
                     {
@@ -298,7 +401,6 @@ namespace VegaN_Capstone.Data
             {
                 connection.Open();
             }
-            Console.WriteLine("Getting item with id:" + id);
 
             string SelectString = string.Format("SELECT * FROM [dbo].[Items] WHERE ItemId={0}", id);
             using (var SelectItemsCommand = connection.CreateCommand())
@@ -337,7 +439,6 @@ namespace VegaN_Capstone.Data
             }
             List<Models.Image> images = new List<Models.Image>();
             string SelectString = string.Format("SELECT * FROM [dbo].[Images] WHERE ItemId={0}", ItemId);
-            Console.WriteLine(SelectString);
 
             using (var SelectItemsCommand = connection.CreateCommand())
             {
@@ -367,12 +468,12 @@ namespace VegaN_Capstone.Data
         private async Task<string> getTypes(int ItemId)
         {
             string types = "";
-            using (DbConnection connection = Context.connection()){
+            using (DbConnection connection = Context.connection())
+            {
 
                 List<int> typeIds = new List<int>();
 
                 string SelectString = string.Format("SELECT [TypeId] FROM [dbo].[ItemType] WHERE ItemId={0}", ItemId);
-                Console.WriteLine(SelectString);
                 using (var SelectStringCommand = connection.CreateCommand())
                 {
                     connection.Open();
@@ -391,7 +492,6 @@ namespace VegaN_Capstone.Data
                 {
                     connection.Open();
                     string SelectString2 = string.Format("SELECT [TypeText] FROM [dbo].[Types] WHERE TypeId={0}", TypeId);
-                    Console.WriteLine(SelectString2);
                     using (var SelectString2Command = connection.CreateCommand())
                     {
                         SelectString2Command.CommandText = SelectString2;
@@ -428,7 +528,6 @@ namespace VegaN_Capstone.Data
             }
 
             string SelectString = "SELECT [ItemId] FROM [dbo].[Items]";
-            Console.WriteLine(SelectString);
             using (var SelectItemsCommand = connection.CreateCommand())
             {
                 SelectItemsCommand.CommandText = SelectString;
@@ -438,7 +537,6 @@ namespace VegaN_Capstone.Data
                     {
                         int ItemId = itemReader.GetInt32(0);
                         Item i = GetItem(ItemId).Result;
-                        Console.WriteLine(i.ItemId + " " + i.ItemName + " " + i.ItemDescription);
                         items.Add(i);
                     }
                 }
@@ -450,6 +548,9 @@ namespace VegaN_Capstone.Data
             }
             return items;
         }
+
+
+
         public IEnumerable<Item> SearchItem(string containsString)
         {
             throw new NotImplementedException();
@@ -462,28 +563,25 @@ namespace VegaN_Capstone.Data
 
         private byte[] ImageToByteArray(System.Drawing.Image image)
         {
-            using (var ms = new MemoryStream())
+            using var ms = new MemoryStream();
+            try
             {
-                try
-                {
-                    Console.WriteLine("before save");
-                    image.Save(ms, image.RawFormat);
-                    Console.WriteLine("after save");
-                    return ms.ToArray();
+                Console.WriteLine("before save");
+                image.Save(ms, image.RawFormat);
+                Console.WriteLine("after save");
+                return ms.ToArray();
 
-                }
-                catch (Exception e)
-                {
-                    return ms.ToArray();
-                }
-
+            }
+            catch (Exception e)
+            {
+                return ms.ToArray();
             }
             //return null;
         }
 
         private System.Drawing.Image ByteArrayToImage(byte[] byteArrayIn)
         {
-            if(byteArrayIn == null ||byteArrayIn.Length == 0)
+            if (byteArrayIn == null || byteArrayIn.Length == 0)
             {
                 throw new Exception("The image byte array is null");
             }
